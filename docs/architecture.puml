@@ -1,0 +1,53 @@
+@startuml
+left to right direction
+skinparam componentStyle rectangle
+skinparam packageStyle rectangle
+
+actor Student
+
+package "Browser" {
+  component "React + TypeScript\nFrontend" as Frontend
+}
+
+package "Application Backend" {
+  component "FastAPI\nRouters + JWT dependencies" as API
+  component "AuthService" as Auth
+  component "DocumentService" as Documents
+  component "StudyService" as Study
+  component "QuizService" as Quizzes
+  component "ProgressService" as Progress
+}
+
+package "Persistence" {
+  database "PostgreSQL\nSQLAlchemy models" as PostgreSQL
+  database "ChromaDB\nPersistent user collections" as Chroma
+  folder "Uploaded PDF / DOCX / TXT files" as Uploads
+}
+
+cloud "Google Gemini API\nEmbeddings + text generation" as Gemini
+
+Student --> Frontend
+Frontend --> API : HTTP/JSON\nBearer JWT
+API --> Auth
+API --> Documents
+API --> Study
+API --> Quizzes
+API --> Progress
+Auth --> PostgreSQL
+Documents --> PostgreSQL : documents + chunks
+Documents --> Uploads : extracted file content
+Documents --> Gemini : document embeddings
+Documents --> Chroma : persist chunks + metadata
+Study --> PostgreSQL : ownership + chunk state
+Study --> Gemini : query embedding + grounded answer
+Study --> Chroma : user/document filtered retrieval
+Quizzes --> PostgreSQL : quizzes + attempts + topic performance
+Quizzes --> Gemini : schema-constrained quiz generation
+Progress --> PostgreSQL : persisted attempts + topic metrics
+
+note right of Gemini
+Generation depends on project quota.
+429/503 errors are surfaced;
+no generated fallback is returned.
+end note
+@enduml

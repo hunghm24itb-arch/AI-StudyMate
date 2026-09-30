@@ -1,0 +1,28 @@
+# Python
+backend/.venv/
+backend/__pycache__/
+backend/.pytest_cache/
+**/__pycache__/
+**/.pytest_cache/
+*.pyc
+*.pyo
+
+# Environment
+backend/.env
+.env
+
+# Database and generated data
+vector_store/
+backend/uploads/
+backend/test.db
+backend/test_app.db
+*.sqlite3
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+
+# OS/editor
+.DS_Store
+.vscode/
